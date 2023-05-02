@@ -1,21 +1,11 @@
-from utils import *
-import os
+from rnn.correctText import correct_text
+from utils import generateText, loadTXT
 
-CORPUS = os.environ.get('CORPUS')
+text = loadTXT('corpus/corpus_4.txt')
 
+result = correct_text(text)
 
-def generateText(starting_sent, k=4, maxLen=1000):
-    sentence = starting_sent
-    ctx = starting_sent[-k:]
-    model = MarkovChain(loadTXT('{}/corpus.txt'.format(CORPUS)))
-    for ix in range(maxLen):
-        next_prediction = sampleNext(ctx, model, k)
-        sentence += next_prediction
-        ctx = sentence[-k:]
-    return sentence
-
-
-print("Function Created Successfully!")
-
-text = generateText("dear", k=4, maxLen=2000)
-print(text)
+with open("result.txt", "w") as output_file:
+    for i in range(0, len(result), 100):
+        output_file.write(result[i:i + 100] + "\n")
+output_file.close()
